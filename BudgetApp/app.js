@@ -44,7 +44,13 @@ var budgetController = (function(){
           }
           data.allItems[type].push(newItem);
           return newItem;
-      }  
+      },
+        testing: function(){
+          return data;
+        },
+        calculateBudget: function() {
+
+        }
     };
 
 })();
@@ -126,6 +132,14 @@ var controller = (function(budgetCtrl, UICtrl){
         });
 
     };
+
+    var updateBudget = function() {
+        //1.calculate budget
+        budgetController.calculateBudget();
+        //2.return budget
+        //3.update UI with budget
+    };
+
     var ctrlAddItem = function(){
         var item, input;
         //1.get the field input data
@@ -138,6 +152,7 @@ var controller = (function(budgetCtrl, UICtrl){
         //4 clear fields
         UIController.clearFields();
         //5.calculate budget
+        updateBudget();
         //6.display budget
 
     };
