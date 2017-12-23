@@ -43,7 +43,7 @@ var budgetController = (function(){
               newItem = new Income(getNewId(type), des, val);
           }
           data.allItems[type].push(newItem);
-          console.log(data.allItems);
+          return newItem;
       }  
     };
 
@@ -56,7 +56,9 @@ var UIController = (function(){
         type:'.add__type',
         description:'.add__description',
         value:'.add__value',
-        addButton:'.add__btn'
+        addButton:'.add__btn',
+        incomeContainer: '.income__list',
+        expensesContainer: '.expenses__list'
     };
     return {
         getInput: function(){
@@ -68,6 +70,41 @@ var UIController = (function(){
         },
         getDOMStrings: function(){
             return DOMStrings;
+        },
+        addListItem: function(obj, type){
+            var html, newHtml, element;
+
+            //get html string with placeholder text
+            if (type === 'inc') {
+                element = DOMStrings.incomeContainer;
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+
+
+            } else if (type === 'exp') {
+                element = DOMStrings.expensesContainer;
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+            console.log(element);
+
+
+
+
+            //replace placeholder with data
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%value%', obj.value);
+
+            //insert html into the DOM
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        },
+        clearFields: function(){
+            var fields, fieldsArr;
+            fields = document.querySelectorAll(DOMStrings.description + ','+ DOMStrings.value);
+            fieldsArr = Array.prototype.slice.call(fields);
+            fieldsArr.forEach(function(current, index, array){
+                current.value = '';
+            });
+            fieldsArr[0].focus();
         }
     };
 })();
@@ -90,14 +127,18 @@ var controller = (function(budgetCtrl, UICtrl){
 
     };
     var ctrlAddItem = function(){
+        var item, input;
         //1.get the field input data
-        var input = UIController.getInput();
+        input = UIController.getInput();
         console.log(input);
         //2.add item to the budget controller
-        budgetController.addItem(input.type, input.description, input.value);
+        item = budgetController.addItem(input.type, input.description, input.value);
         //3.add item to UI
-        //4.calculate budget
-        //5.display budget
+        UIController.addListItem(item, input.type);
+        //4 clear fields
+        UIController.clearFields();
+        //5.calculate budget
+        //6.display budget
 
     };
 
