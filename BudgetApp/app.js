@@ -22,6 +22,14 @@ var budgetController = (function(){
         return data.allItems[type][lastElem].id + 1;
     };
 
+    var calculateTotal = function(type) {
+        var total = 0;
+        data.allItems[type].forEach(function(val,index,array){
+            total += parseFloat(val.value);
+        });
+        return total;
+    };
+
     var data = {
         allItems:{
             inc:[],
@@ -48,8 +56,12 @@ var budgetController = (function(){
         testing: function(){
           return data;
         },
-        calculateBudget: function() {
 
+        calculateBudget: function() {
+            var totalExp = calculateTotal('exp');
+            var totalInc = calculateTotal('inc');
+            data.totals.exp = totalExp;
+            data.totals.inc = totalInc;
         }
     };
 
@@ -137,6 +149,7 @@ var controller = (function(budgetCtrl, UICtrl){
         //1.calculate budget
         budgetController.calculateBudget();
         //2.return budget
+
         //3.update UI with budget
     };
 
