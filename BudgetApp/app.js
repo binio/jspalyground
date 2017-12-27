@@ -248,8 +248,8 @@ var controller = (function(budgetCtrl, UICtrl){
             // 2. delete item from UI
             UIController.deleteListItem(itemId);
             // 3. update budget in data structure
+            updateBudget();
 
-            // 4. redisplay new budget
         }
     };
 
