@@ -145,6 +145,7 @@ var UIController = (function(){
         container: '.container',
         expensePercLebel: '.item__percentage',
         monthYearLebel: '.budget__title--month'
+
     };
     var formatNumber = function(num, type) {
         var numSplit, int, dec, type, sign;
@@ -163,6 +164,13 @@ var UIController = (function(){
 
         return sign + ' ' + int + '.'+dec;
     };
+
+    var nodeListForEach = function(list, callback) {
+        for(var i = 0; i < list.length; i++) {
+            callback(list[i], i);
+        }
+    };
+
     return {
         getInput: function(){
             return {
@@ -228,11 +236,6 @@ var UIController = (function(){
         displayPercentages: function(percentages){
             var fields = document.querySelectorAll(DOMStrings.expensePercLebel);
             console.log(fields);
-            var nodeListForEach = function(list, callback) {
-                for(var i = 0; i < list.length; i++) {
-                    callback(list[i], i);
-                }
-            };
 
             nodeListForEach(fields, function(current, index){
                 console.log(current);
@@ -251,7 +254,19 @@ var UIController = (function(){
             month = now.getMonth();
             months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
             document.querySelector(DOMStrings.monthYearLebel).textContent = months[month] + ' '+ year;
-         }
+         },
+        changeType: function() {
+            var fields = document.querySelectorAll(
+                DOMStrings.type + ',' +
+                DOMStrings.description + ',' +
+                DOMStrings.value
+            );
+            nodeListForEach(fields, function(current){
+                current.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMStrings.addButton).classList.toggle('red');
+        }
     };
 })();
 
@@ -271,7 +286,8 @@ var controller = (function(budgetCtrl, UICtrl){
             }
         });
 
-        document.querySelector(DOMStrings.container).addEventListener('click', ctrlDeleteItem)
+        document.querySelector(DOMStrings.container).addEventListener('click', ctrlDeleteItem);
+        document.querySelector(DOMStrings.type).addEventListener('change', UIController.changeType)
 
     };
 
